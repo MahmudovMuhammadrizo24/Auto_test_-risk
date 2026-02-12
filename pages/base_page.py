@@ -1,23 +1,19 @@
-from playwright.sync_api import Page
+import allure
 
 class BasePage:
-    def __init__(self, page: Page):
+    def __init__(self, page):
         self.page = page
 
-    def open(self, url: str):
-        self.page.goto(url)
+    def open_url(self, url):
+        with allure.step(f"Sahifani ochish: {url}"):
+            self.page.goto(url)
 
-    def click(self, locator: str):
-        self.page.locator(locator).click()
+    def click(self, selector):
+        with allure.step(f"Elementni bosish: {selector}"):
+            self.page.wait_for_selector(selector)
+            self.page.click(selector)
 
-    def fill(self, locator: str, value: str):
-        self.page.locator(locator).fill(value)
-
-    def get_text(self, locator: str):
-        return self.page.locator(locator).inner_text()
-
-    def is_visible(self, locator: str):
-        return self.page.locator(locator).is_visible()
-
-    def wait_for_element(self, locator: str):
-        self.page.locator(locator).wait_for()
+    def fill(self, selector, text):
+        with allure.step(f"Matn kiritish: {text}"):
+            self.page.wait_for_selector(selector)
+            self.page.fill(selector, text)
